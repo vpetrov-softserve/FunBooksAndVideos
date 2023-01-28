@@ -11,10 +11,12 @@ namespace Persistence
         }
 
         public DbSet<ProductDetails> Products { get; set; }
+        public DbSet<Order> Orders {get; set;}
+        public DbSet<User> Users {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>().ToTable(typeof(Product).ToString());
+            modelBuilder.Entity<ContentProduct>().ToTable(typeof(ContentProduct).ToString());
             modelBuilder.Entity<Membership>().ToTable(typeof(Membership).ToString());
         }
     }

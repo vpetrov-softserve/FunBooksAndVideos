@@ -1,5 +1,6 @@
 using API;
 using API.Utilities.Error;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -14,6 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddMediatR(typeof(Application.ContentProducts.List.Handler));
+builder.Services.AddMediatR(typeof(Application.ContentProducts.Details.Handler));
 
 var app = builder.Build();
 

@@ -14,7 +14,7 @@ namespace Persistence
 
             var products = new List<ProductDetails>
             {
-                new Product
+                new ContentProduct
                 {
                     Name = "Comprehensive First Aid Training",
                     SKU = "ABC1234",
@@ -22,7 +22,7 @@ namespace Persistence
                     Price = 34.50M,
                     ProductType = ProductType.Video
                  },
-                  new Product
+                  new ContentProduct
                 {
                     Name = "The Girld on the train",
                     SKU = "ABC3241",
@@ -30,7 +30,7 @@ namespace Persistence
                     Price = 45.90M,
                     ProductType = ProductType.Book
                  },
-                   new Product
+                   new ContentProduct
                 {
                     Name = "Mumble Jumble",
                     SKU = "ABC4512",

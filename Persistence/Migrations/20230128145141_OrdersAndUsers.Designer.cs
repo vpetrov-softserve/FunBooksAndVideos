@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230128145141_OrdersAndUsers")]
+    partial class OrdersAndUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -86,7 +89,17 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.ContentProduct", b =>
+            modelBuilder.Entity("Domain.Membership", b =>
+                {
+                    b.HasBaseType("Domain.ProductDetails");
+
+                    b.Property<bool>("IsActivated")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Domain.Membership", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Product", b =>
                 {
                     b.HasBaseType("Domain.ProductDetails");
 
@@ -96,20 +109,7 @@ namespace Persistence.Migrations
                     b.Property<int>("ProductType")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("Domain.ContentProduct", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Membership", b =>
-                {
-                    b.HasBaseType("Domain.ProductDetails");
-
-                    b.Property<bool>("IsActivated")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("INTEGER");
-
-                    b.ToTable("Domain.Membership", (string)null);
+                    b.ToTable("Domain.Product", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -126,20 +126,20 @@ namespace Persistence.Migrations
                         .HasForeignKey("OrderId");
                 });
 
-            modelBuilder.Entity("Domain.ContentProduct", b =>
-                {
-                    b.HasOne("Domain.ProductDetails", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.ContentProduct", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Membership", b =>
                 {
                     b.HasOne("Domain.ProductDetails", null)
                         .WithOne()
                         .HasForeignKey("Domain.Membership", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Product", b =>
+                {
+                    b.HasOne("Domain.ProductDetails", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Product", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
