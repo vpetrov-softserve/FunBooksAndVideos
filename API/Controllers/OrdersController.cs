@@ -17,7 +17,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<Domain.Order>> GetUsersAllOrders(string userId)
+        public async Task<ActionResult<List<Domain.Order>>> GetUsersAllOrders(Guid userId)
         {
             return Ok();
         }
