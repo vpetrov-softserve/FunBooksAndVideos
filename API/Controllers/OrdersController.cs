@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Application.DTOs;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -23,9 +22,16 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PlaceOrder()
+        public async Task<ActionResult<OrderSlipDto>> PlaceOrder(OrderDto orderDto)
         {
-            return Ok();
+            var result = await Mediator.Send(new Application.Orders.Create.Command { OrderDto = orderDto});
+
+            if(!result.IsSuccess)
+                return BadRequest(result);
+                
+            var slipDto = await Mediator.Send(new Application.Orders.QueryOrderProducts.Query{ OrderId = result.Id});
+            
+            return Ok(slipDto);
         }
 
     }

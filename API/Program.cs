@@ -1,10 +1,13 @@
-using API;
-using API.Utilities.Error;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Application.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -19,6 +22,20 @@ builder.Services.AddDbContext<DataContext>(opt => {
 builder.Services.AddMediatR(typeof(Application.ContentProducts.List.Handler));
 builder.Services.AddMediatR(typeof(Application.ContentProducts.Details.Handler));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => 
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = 
+                new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                    .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,6 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

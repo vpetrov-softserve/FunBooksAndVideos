@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230129192308_modifications")]
+    partial class modifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -24,9 +27,6 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ShippingAddress")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("TotalPrice")
@@ -49,6 +49,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -56,6 +59,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
 
@@ -74,17 +79,12 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsShipped")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContentProductId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("UsersContentProducts");
                 });
@@ -101,9 +101,6 @@ namespace Persistence.Migrations
                     b.Property<int?>("MembershipId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
@@ -111,24 +108,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("MembershipId");
 
-                    b.HasIndex("OrderId");
-
                     b.ToTable("UsersMemberships");
-                });
-
-            modelBuilder.Entity("OrderProductDetails", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("OrdersId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("OrderProductDetails");
                 });
 
             modelBuilder.Entity("Domain.ContentProduct", b =>
@@ -154,19 +134,20 @@ namespace Persistence.Migrations
                     b.ToTable("Domain.Membership", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.ProductDetails", b =>
+                {
+                    b.HasOne("Domain.Order", null)
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("Domain.UsersContentProducts", b =>
                 {
                     b.HasOne("Domain.ContentProduct", "ContentProduct")
                         .WithMany()
                         .HasForeignKey("ContentProductId");
 
-                    b.HasOne("Domain.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId");
-
                     b.Navigation("ContentProduct");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Domain.UsersMemberships", b =>
@@ -175,28 +156,7 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("MembershipId");
 
-                    b.HasOne("Domain.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId");
-
                     b.Navigation("Membership");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("OrderProductDetails", b =>
-                {
-                    b.HasOne("Domain.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.ProductDetails", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.ContentProduct", b =>
@@ -215,6 +175,11 @@ namespace Persistence.Migrations
                         .HasForeignKey("Domain.Membership", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Order", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

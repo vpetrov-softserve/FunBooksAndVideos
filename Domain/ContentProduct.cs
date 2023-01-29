@@ -9,8 +9,7 @@ namespace Domain
     public class ContentProduct : ProductDetails
     {
         public ProductType ProductType { get; set; }
-
-        public bool IsShipped { get; set; }
+        public int Count { get; set; }
     }
 
     public enum ProductType

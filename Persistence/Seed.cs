@@ -18,32 +18,39 @@ namespace Persistence
                 {
                     Name = "Comprehensive First Aid Training",
                     SKU = "ABC1234",
-                    IsShipped = false,
                     Price = 34.50M,
-                    ProductType = ProductType.Video
+                    ProductType = ProductType.Video,
+                    Count = 10
                  },
                   new ContentProduct
                 {
                     Name = "The Girld on the train",
                     SKU = "ABC3241",
-                    IsShipped = false,
                     Price = 45.90M,
-                    ProductType = ProductType.Book
+                    ProductType = ProductType.Book,
+                    Count = 15
                  },
                    new ContentProduct
                 {
                     Name = "Mumble Jumble",
                     SKU = "ABC4512",
-                    IsShipped = false,
                     Price = 99.90M,
-                    ProductType = ProductType.Book
+                    ProductType = ProductType.Book,
+                    Count = 20
                  },
                  new Membership
                  {
                     Name = "Book Club Membership",
                     SKU = "ABC467812",
-                    IsActivated = false,
-                    Price = 19.99M
+                    Price = 19.99M,
+                    MembershipType = MembershipType.BookClub
+                },
+                new Membership
+                {
+                    Name = "Video Club Membership",
+                    SKU = "ABC456712",
+                    Price = 29.99M,
+                    MembershipType = MembershipType.VideoClub
                 }
              };
 
